@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KINETIC PULSE — High-End Athletic Performance & Fitness Club</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- GSAP Animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Custom Kinetic Pulse Design Tokens -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        midnight: '#111827',
+                        coral: '#FF6248',
+                        mint: '#B9F3D0',
+                        chalk: '#F3F0E8',
+                        graphite: '#283244',
+                        softgrey: '#A6AFBD'
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #111827;
+            color: #F3F0E8;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism & Panel Utilities */
+        .glass-panel {
+            background: rgba(40, 50, 68, 0.45);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(243, 240, 232, 0.1);
+        }
+
+        .glass-panel-light {
+            background: rgba(243, 240, 232, 0.95);
+            color: #111827;
+        }
+
+        .glow-coral {
+            box-shadow: 0 0 30px rgba(255, 98, 72, 0.4);
+        }
+
+        .glow-mint {
+            box-shadow: 0 0 25px rgba(185, 243, 208, 0.25);
+        }
+
+        /* 3D Tilt Card Effects */
+        .tilt-card {
+            transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s ease;
+            transform-style: preserve-3d;
+        }
+        .tilt-card:hover {
+            transform: translateY(-8px) rotateX(4deg) rotateY(-3deg);
+            border-color: rgba(255, 98, 72, 0.6);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #111827; }
+        ::-webkit-scrollbar-thumb { background: #283244; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FF6248; }
+
+        /* Animation Keyframes */
+        @keyframes pulseRhythm {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.08); opacity: 1; }
+        }
+        .pulse-rhythm { animation: pulseRhythm 3s ease-in-out infinite; }
+    </style>
+</head>
+<body class="selection:bg-coral selection:text-midnight">
+
+    <!-- Toast Notifications Layer -->
+    <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- MAIN NAVIGATION BAR -->
+    <nav class="fixed top-0 left-0 right-0 z-40 transition-all duration-300 py-4 px-4 sm:px-8" id="navbar">
+        <div class="max-w-7xl mx-auto glass-panel rounded-full px-6 py-3.5 flex items-center justify-between border border-white/10 shadow-2xl">
+            
+            <!-- ORIGINAL KP MONOGRAM LOGO -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-midnight border-2 border-coral flex items-center justify-center font-display font-black text-xl text-coral tracking-wider group-hover:bg-coral group-hover:text-midnight transition-all">
+                    K<span class="text-mint group-hover:text-midnight">P</span>
+                </div>
+                <span class="font-display font-extrabold text-2xl tracking-tight text-chalk">
+                    KINETIC <span class="text-coral">PULSE</span>
+                </span>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <div class="hidden lg:flex items-center gap-7 text-xs font-bold uppercase tracking-wider text-softgrey">
+                <a href="#about" class="hover:text-coral transition-colors">Philosophy</a>
+                <a href="#programs" class="hover:text-coral transition-colors">Programs</a>
+                <a href="#schedule" class="hover:text-coral transition-colors">Schedule</a>
+                <a href="#trainers" class="hover:text-coral transition-colors">Coaches</a>
+                <a href="#anatomy" class="hover:text-coral transition-colors">Muscle Map</a>
+                <a href="#bmi" class="hover:text-coral transition-colors">Analytics</a>
+                <a href="#pricing" class="hover:text-coral transition-colors">Membership</a>
+            </div>
+
+            <!-- Right Actions: Synthesizer Audio & Booking CTA -->
+            <div class="flex items-center gap-4">
+                <!-- BPM Synthesizer Toggle Button -->
+                <button id="synth-btn" class="glass-panel p-2.5 rounded-full text-softgrey hover:text-coral hover:border-coral transition-all" title="Toggle BPM Rhythm Audio">
+                    <i data-lucide="radio" class="w-5 h-5"></i>
+                </button>
+
+                <!-- Book Session Primary CTA -->
+                <a href="#booking" class="hidden sm:inline-flex px-6 py-2.5 rounded-full bg-coral text-midnight font-extrabold text-xs tracking-wider uppercase hover:bg-white hover:glow-coral transition-all transform hover:-translate-y-0.5">
+                    BOOK SESSION
+                </a>
+
+                <!-- Mobile Menu Button -->
+                <button id="mobile-toggle" class="lg:hidden text-chalk p-2">
+                    <i data-lucide="menu" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div id="mobile-drawer" class="hidden lg:hidden glass-panel mx-4 mt-3 rounded-3xl p-6 flex-col gap-4 text-center font-display font-bold text-lg border border-white/10">
+            <a href="#about" class="py-2 hover:text-coral mobile-link">Philosophy</a>
+            <a href="#programs" class="py-2 hover:text-coral mobile-link">Programs</a>
+            <a href="#schedule" class="py-2 hover:text-coral mobile-link">Schedule</a>
+            <a href="#trainers" class="py-2 hover:text-coral mobile-link">Coaches</a>
+            <a href="#anatomy" class="py-2 hover:text-coral mobile-link">Muscle Anatomy</a>
+            <a href="#bmi" class="py-2 hover:text-coral mobile-link">BMI Lab</a>
+            <a href="#pricing" class="py-2 hover:text-coral mobile-link">Membership</a>
+            <a href="#booking" class="w-full py-3 bg-coral text-midnight rounded-2xl font-extrabold text-sm uppercase">BOOK SESSION NOW</a>
+        </div>
+    </nav>
+
+    <!-- SECTION 1: CINEMATIC HERO SECTION -->
+    <section id="hero" class="relative min-h-screen pt-36 pb-20 flex items-center justify-center overflow-hidden">
+        <!-- Background Imagery with Gradient Vignette -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://images.unsplash.com/photo-1517838277536-f5f99be501cd?auto=format&fit=crop&q=80&w=1920" class="w-full h-full object-cover opacity-25 filter brightness-90 scale-105" alt="Cinematic Gym Background">
+            <div class="absolute inset-0 bg-gradient-to-t from-midnight via-midnight/80 to-transparent"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full text-center">
+            
+            <!-- Brand Badge -->
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-coral/30 mb-8">
+                <span class="w-2 h-2 rounded-full bg-coral animate-ping"></span>
+                <span class="text-xs font-extrabold tracking-widest text-coral uppercase">KINETIC PULSE ART DIRECTION</span>
+            </div>
+
+            <!-- Hero Headline -->
+            <h1 class="font-display font-black text-6xl sm:text-8xl lg:text-9xl leading-none uppercase tracking-tight text-chalk mb-8">
+                FIND YOUR <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-coral via-chalk to-mint">MOMENTUM.</span>
+            </h1>
+
+            <!-- Subtitle -->
+            <p class="max-w-2xl mx-auto text-base sm:text-xl text-softgrey font-normal leading-relaxed mb-10">
+                Train with purpose. Move with confidence. Discover a stronger relationship with athletic movement through science and master coaching.
+            </p>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-5 mb-16">
+                <a href="#booking" class="w-full sm:w-auto px-8 py-4 rounded-full bg-coral text-midnight font-extrabold text-xs tracking-widest uppercase hover:bg-white hover:glow-coral transition-all transform hover:-translate-y-1">
+                    EXPLORE TRAINING
+                </a>
+                <a href="#schedule" class="w-full sm:w-auto px-8 py-4 rounded-full glass-panel text-chalk border border-white/20 font-extrabold text-xs tracking-widest uppercase hover:border-coral hover:text-coral transition-all">
+                    VIEW CLASS SCHEDULE
+                </a>
+            </div>
+
+            <!-- Audio Synthesizer Control Widget -->
+            <div class="max-w-xl mx-auto glass-panel p-4 rounded-2xl border border-white/10 flex items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-3 h-3 rounded-full bg-mint" id="bpm-indicator"></div>
+                    <span class="text-xs font-extrabold text-chalk uppercase">BPM SYNTHESIZER: <span id="bpm-val" class="text-coral">128</span> BPM</span>
+                </div>
+                <input type="range" id="bpm-slider" min="90" max="160" value="128" class="w-32 h-1 bg-graphite rounded-lg appearance-none cursor-pointer accent-coral">
+                <button id="synth-play-btn" class="px-3 py-1 rounded-lg bg-coral text-midnight font-extrabold text-[10px] uppercase">PLAY BEAT</button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 2: ABOUT & BRAND PHILOSOPHY -->
+    <section id="about" class="py-24 relative z-10 border-t border-white/5 bg-graphite/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <div class="lg:col-span-6 space-y-6">
+                    <span class="text-coral text-xs font-extrabold uppercase tracking-widest block">THE KINETIC PHILOSOPHY</span>
+                    <h2 class="font-display font-extrabold text-4xl sm:text-6xl text-chalk uppercase">BUILT THROUGH <span class="text-coral">MOVEMENT.</span></h2>
+                    <p class="text-softgrey text-sm sm:text-base leading-relaxed">
+                        We reject repetitive gym templates and superficial fitness gimmicks. Kinetic Pulse represents a refined athletic sanctuary designed for athletes, movement seekers, and individuals who demand high-tier physical conditioning.
+                    </p>
+                    <div class="grid grid-cols-2 gap-6 pt-4">
+                        <div class="border-l-2 border-coral pl-4">
+                            <span class="font-display font-bold text-2xl text-chalk block">INTELLIGENT</span>
+                            <span class="text-xs text-softgrey">Biomechanically sound movement protocols</span>
+                        </div>
+                        <div class="border-l-2 border-mint pl-4">
+                            <span class="font-display font-bold text-2xl text-chalk block">COMMUNITY</span>
+                            <span class="text-xs text-softgrey">Zero-ego high performance environment</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 relative">
+                    <div class="relative rounded-3xl overflow-hidden border border-white/10 shadow-2xl">
+                        <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=800" alt="Gym Atmosphere" class="w-full h-[450px] object-cover">
+                        <div class="absolute inset-0 bg-gradient-to-t from-midnight via-transparent to-transparent"></div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: TRAINING PROGRAMS (3D TILT CARDS) -->
+    <section id="programs" class="py-24 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-coral text-xs font-extrabold uppercase tracking-widest mb-2 block">DISCIPLINES</span>
+                <h2 class="font-display font-extrabold text-5xl sm:text-6xl uppercase tracking-tight text-chalk">TRAIN WITH <span class="text-coral">INTENTION</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                
+                <!-- Program 1 -->
+                <div class="tilt-card glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-coral/10 text-coral flex items-center justify-center mb-6 font-bold">
+                            <i data-lucide="dumbbell" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-chalk mb-2 uppercase">STRENGTH & HYPERTROPHY</h3>
+                        <p class="text-softgrey text-xs leading-relaxed mb-6">Barbell mechanics, powerlifting fundamentals, and structural muscle building.</p>
+                    </div>
+                    <button onclick="startBookingWithProgram('Strength & Hypertrophy')" class="w-full py-3 rounded-xl bg-graphite hover:bg-coral hover:text-midnight text-chalk font-extrabold text-xs uppercase tracking-wider transition-all border border-white/10">
+                        BOOK THIS PROGRAM
+                    </button>
+                </div>
+
+                <!-- Program 2 -->
+                <div class="tilt-card glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-mint/10 text-mint flex items-center justify-center mb-6 font-bold">
+                            <i data-lucide="swords" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-chalk mb-2 uppercase">MUAY THAI & KICKBOXING</h3>
+                        <p class="text-softgrey text-xs leading-relaxed mb-6">Explosive striking conditioning, reflex drills, and authentic ring movement.</p>
+                    </div>
+                    <button onclick="startBookingWithProgram('Muay Thai & Kickboxing')" class="w-full py-3 rounded-xl bg-graphite hover:bg-coral hover:text-midnight text-chalk font-extrabold text-xs uppercase tracking-wider transition-all border border-white/10">
+                        BOOK THIS PROGRAM
+                    </button>
+                </div>
+
+                <!-- Program 3 -->
+                <div class="tilt-card glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="w-12 h-12 rounded-2xl bg-coral/10 text-coral flex items-center justify-center mb-6 font-bold">
+                            <i data-lucide="flame" class="w-6 h-6"></i>
+                        </div>
+                        <h3 class="font-display font-bold text-2xl text-chalk mb-2 uppercase">HYPER-HIIT & CARDIO</h3>
+                        <p class="text-softgrey text-xs leading-relaxed mb-6">High-density metabolic conditioning designed for rapid fat burn and stamina.</p>
+                    </div>
+                    <button onclick="startBookingWithProgram('Hyper-HIIT & Cardio')" class="w-full py-3 rounded-xl bg-graphite hover:bg-coral hover:text-midnight text-chalk font-extrabold text-xs uppercase tracking-wider transition-all border border-white/10">
+                        BOOK THIS PROGRAM
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE WEEKLY CLASS SCHEDULE -->
+    <section id="schedule" class="py-24 relative z-10 bg-graphite/20 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+                <div>
+                    <span class="text-coral text-xs font-extrabold uppercase tracking-widest mb-2 block">TIMETABLE</span>
+                    <h2 class="font-display font-extrabold text-5xl uppercase tracking-tight text-chalk">WEEKLY <span class="text-coral">SCHEDULE</span></h2>
+                </div>
+
+                <!-- Filters -->
+                <div class="flex flex-wrap gap-2" id="schedule-filters">
+                    <button class="sched-filter active px-4 py-2 rounded-full text-xs font-extrabold uppercase bg-coral text-midnight" data-filter="all">ALL CLASSES</button>
+                    <button class="sched-filter px-4 py-2 rounded-full text-xs font-extrabold uppercase glass-panel text-softgrey hover:text-chalk" data-filter="strength">STRENGTH</button>
+                    <button class="sched-filter px-4 py-2 rounded-full text-xs font-extrabold uppercase glass-panel text-softgrey hover:text-chalk" data-filter="combat">COMBAT</button>
+                    <button class="sched-filter px-4 py-2 rounded-full text-xs font-extrabold uppercase glass-panel text-softgrey hover:text-chalk" data-filter="hiit">HIIT</button>
+                </div>
+            </div>
+
+            <!-- Day Selector Tabs -->
+            <div class="flex overflow-x-auto gap-3 pb-4 mb-8 border-b border-white/10 no-scrollbar">
+                <button class="day-tab active px-6 py-3 rounded-xl font-display font-bold text-lg uppercase bg-coral text-midnight flex-shrink-0" data-day="mon">MON</button>
+                <button class="day-tab px-6 py-3 rounded-xl font-display font-bold text-lg uppercase glass-panel text-softgrey hover:text-chalk flex-shrink-0" data-day="tue">TUE</button>
+                <button class="day-tab px-6 py-3 rounded-xl font-display font-bold text-lg uppercase glass-panel text-softgrey hover:text-chalk flex-shrink-0" data-day="wed">WED</button>
+                <button class="day-tab px-6 py-3 rounded-xl font-display font-bold text-lg uppercase glass-panel text-softgrey hover:text-chalk flex-shrink-0" data-day="thu">THU</button>
+                <button class="day-tab px-6 py-3 rounded-xl font-display font-bold text-lg uppercase glass-panel text-softgrey hover:text-chalk flex-shrink-0" data-day="fri">FRI</button>
+            </div>
+
+            <!-- Schedule List Container -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="schedule-container">
+                <!-- Dynamically populated via JavaScript -->
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 5: INTERACTIVE HUMAN MUSCLE ANATOMY MAP -->
+    <section id="anatomy" class="py-24 relative z-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-mint text-xs font-extrabold uppercase tracking-widest mb-2 block">HUMAN BIOMECHANICS</span>
+                <h2 class="font-display font-extrabold text-5xl uppercase tracking-tight text-chalk">INTERACTIVE <span class="text-mint">MUSCLE MAP</span></h2>
+                <p class="text-softgrey text-sm mt-2">Click any targeted muscle group to reveal recommended training exercises and equipment protocols.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                
+                <!-- Muscle Buttons Grid -->
+                <div class="lg:col-span-5 space-y-3">
+                    <button onclick="selectMuscle('chest')" class="muscle-btn active w-full p-4 rounded-2xl glass-panel border border-coral text-left flex justify-between items-center" data-group="chest">
+                        <span class="font-display font-bold text-chalk uppercase">CHEST & PECTORALS</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-coral"></i>
+                    </button>
+                    <button onclick="selectMuscle('back')" class="muscle-btn w-full p-4 rounded-2xl glass-panel border border-white/5 text-left flex justify-between items-center hover:border-white/20" data-group="back">
+                        <span class="font-display font-bold text-chalk uppercase">BACK & LATISSIMUS</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-softgrey"></i>
+                    </button>
+                    <button onclick="selectMuscle('shoulders')" class="muscle-btn w-full p-4 rounded-2xl glass-panel border border-white/5 text-left flex justify-between items-center hover:border-white/20" data-group="shoulders">
+                        <span class="font-display font-bold text-chalk uppercase">SHOULDERS & DELTOIDS</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-softgrey"></i>
+                    </button>
+                    <button onclick="selectMuscle('legs')" class="muscle-btn w-full p-4 rounded-2xl glass-panel border border-white/5 text-left flex justify-between items-center hover:border-white/20" data-group="legs">
+                        <span class="font-display font-bold text-chalk uppercase">QUADRICEPS & HAMSTRINGS</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-softgrey"></i>
+                    </button>
+                    <button onclick="selectMuscle('core')" class="muscle-btn w-full p-4 rounded-2xl glass-panel border border-white/5 text-left flex justify-between items-center hover:border-white/20" data-group="core">
+                        <span class="font-display font-bold text-chalk uppercase">CORE & ABDOMINALS</span>
+                        <i data-lucide="chevron-right" class="w-5 h-5 text-softgrey"></i>
+                    </button>
+                </div>
+
+                <!-- Muscle Information Display Card -->
+                <div class="lg:col-span-7 glass-panel p-8 rounded-3xl border border-mint/30 space-y-6" id="muscle-card">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-2xl bg-mint/10 text-mint flex items-center justify-center font-bold text-xl">💪</div>
+                        <div>
+                            <h3 class="font-display font-extrabold text-3xl text-chalk uppercase" id="m-title">CHEST & PECTORALS</h3>
+                            <span class="text-xs text-mint font-bold uppercase tracking-wider">UPPER BODY PUSH GROUP</span>
+                        </div>
+                    </div>
+                    <p class="text-softgrey text-sm leading-relaxed" id="m-desc">
+                        The pectoral muscles drive horizontal pressing force. Training this group enhances upper body power, posture, and front-torso athletic balance.
+                    </p>
+                    <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6">
+                        <div class="bg-midnight/60 p-4 rounded-2xl border border-white/5">
+                            <span class="text-[10px] text-coral font-extrabold uppercase block mb-1">KEY EXERCISES</span>
+                            <ul class="text-xs text-softgrey space-y-1 font-semibold" id="m-exercises">
+                                <li>• Incline Barbell Bench Press</li>
+                                <li>• Cable Chest Flyes</li>
+                                <li>• Weighted Push-ups</li>
+                            </ul>
+                        </div>
+                        <div class="bg-midnight/60 p-4 rounded-2xl border border-white/5">
+                            <span class="text-[10px] text-mint font-extrabold uppercase block mb-1">EQUIPMENT</span>
+                            <ul class="text-xs text-softgrey space-y-1 font-semibold" id="m-equipment">
+                                <li>• Power Racks</li>
+                                <li>• Dumbbells</li>
+                                <li>• Cable Machines</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 6: COMPLETE MULTI-STEP DEMO BOOKING EXPERIENCE (8 STEPS) -->
+    <section id="booking" class="py-24 relative z-10 bg-graphite/30 border-t border-white/5">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="text-center mb-12">
+                <span class="text-coral text-xs font-extrabold uppercase tracking-widest block mb-2">FRONTEND DEMO FLOW</span>
+                <h2 class="font-display font-extrabold text-4xl sm:text-5xl uppercase text-chalk">RESERVE YOUR <span class="text-coral">SESSION</span></h2>
+            </div>
+
+            <!-- Booking Progress Bar -->
+            <div class="glass-panel p-8 rounded-3xl border border-white/10 relative overflow-hidden">
+                <div class="flex items-center justify-between mb-8 text-xs font-bold uppercase tracking-wider text-softgrey" id="booking-steps-indicator">
+                    <span class="text-coral">1. Class</span>
+                    <span>2. Coach</span>
+                    <span>3. Date</span>
+                    <span>4. Time</span>
+                    <span>5. Info</span>
+                    <span>6. Review</span>
+                    <span>7. Confirm</span>
+                </div>
+
+                <!-- STEP 1: CLASS SELECTION -->
+                <div id="b-step-1" class="booking-step space-y-6">
+                    <h3 class="font-display font-bold text-xl text-chalk uppercase">STEP 1: SELECT A FITNESS CLASS</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="selectBookingClass('Kickboxing & Muay Thai')" class="p-4 rounded-2xl bg-midnight border border-white/10 hover:border-coral text-left space-y-1 transition-all">
+                            <div class="font-bold text-chalk text-sm uppercase">KICKBOXING & MUAY THAI</div>
+                            <div class="text-xs text-softgrey">60 Mins • Combat Conditioning</div>
+                        </button>
+                        <button onclick="selectBookingClass('Barbell Strength & Hypertrophy')" class="p-4 rounded-2xl bg-midnight border border-white/10 hover:border-coral text-left space-y-1 transition-all">
+                            <div class="font-bold text-chalk text-sm uppercase">STRENGTH & HYPERTROPHY</div>
+                            <div class="text-xs text-softgrey">75 Mins • Heavy Powerlifting</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 2: TRAINER SELECTION -->
+                <div id="b-step-2" class="booking-step hidden space-y-6">
+                    <h3 class="font-display font-bold text-xl text-chalk uppercase">STEP 2: SELECT A MASTER COACH</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <button onclick="selectBookingCoach('Marcus Vance')" class="p-4 rounded-2xl bg-midnight border border-white/10 hover:border-coral text-left space-y-1 transition-all">
+                            <div class="font-bold text-chalk text-sm uppercase">MARCUS VANCE</div>
+                            <div class="text-xs text-softgrey">Head Power Coach</div>
+                        </button>
+                        <button onclick="selectBookingCoach('Elena Rostova')" class="p-4 rounded-2xl bg-midnight border border-white/10 hover:border-coral text-left space-y-1 transition-all">
+                            <div class="font-bold text-chalk text-sm uppercase">ELENA ROSTOVA</div>
+                            <div class="text-xs text-softgrey">HIIT & Biomechanics</div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- STEP 3 & 4: DATE & TIME -->
+                <div id="b-step-3" class="booking-step hidden space-y-6">
+                    <h3 class="font-display font-bold text-xl text-chalk uppercase">STEP 3 & 4: PICK DATE & TIME SLOT</h3>
+                    <div class="space-y-4">
+                        <input type="date" id="booking-date-input" value="2026-11-10" class="w-full p-4 rounded-2xl bg-midnight border border-white/10 text-chalk text-sm focus:outline-none focus:border-coral">
+                        <div class="grid grid-cols-3 gap-3">
+                            <button onclick="selectBookingTime('09:00 AM')" class="time-slot-btn p-3 rounded-xl bg-midnight border border-white/10 text-xs font-bold text-chalk hover:border-coral">09:00 AM</button>
+                            <button onclick="selectBookingTime('02:00 PM')" class="time-slot-btn p-3 rounded-xl bg-midnight border border-white/10 text-xs font-bold text-chalk hover:border-coral">02:00 PM</button>
+                            <button onclick="selectBookingTime('06:00 PM')" class="time-slot-btn p-3 rounded-xl bg-midnight border border-white/10 text-xs font-bold text-chalk hover:border-coral">06:00 PM</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5 & 6: CONTACT DETAILS & REVIEW -->
+                <div id="b-step-5" class="booking-step hidden space-y-6">
+                    <h3 class="font-display font-bold text-xl text-chalk uppercase">STEP 5 & 6: CONTACT & REVIEW</h3>
+                    <div class="space-y-3">
+                        <input type="text" id="b-name" placeholder="Full Athlete Name" class="w-full p-4 rounded-2xl bg-midnight border border-white/10 text-chalk text-sm focus:outline-none focus:border-coral">
+                        <input type="email" id="b-email" placeholder="Email Address" class="w-full p-4 rounded-2xl bg-midnight border border-white/10 text-chalk text-sm focus:outline-none focus:border-coral">
+                    </div>
+                    <div class="bg-midnight/80 p-4 rounded-2xl border border-white/5 space-y-2 text-xs">
+                        <div class="flex justify-between"><span class="text-softgrey">Selected Class:</span><span id="summary-class" class="font-bold text-chalk">-</span></div>
+                        <div class="flex justify-between"><span class="text-softgrey">Coach:</span><span id="summary-coach" class="font-bold text-chalk">-</span></div>
+                        <div class="flex justify-between"><span class="text-softgrey">Time:</span><span id="summary-time" class="font-bold text-coral">-</span></div>
+                    </div>
+                    <button onclick="confirmBooking()" class="w-full py-4 rounded-2xl bg-coral text-midnight font-extrabold text-xs uppercase tracking-widest hover:bg-white transition-all">
+                        CONFIRM BOOKING NOW
+                    </button>
+                </div>
+
+                <!-- STEP 8: CELEBRATORY SUCCESS SCREEN -->
+                <div id="b-step-8" class="booking-step hidden text-center py-8 space-y-4">
+                    <div class="w-16 h-16 rounded-full bg-mint/20 text-mint text-3xl flex items-center justify-center mx-auto animate-bounce">✓</div>
+                    <h3 class="font-display font-black text-3xl text-chalk uppercase">YOUR SESSION IS RESERVED</h3>
+                    <p class="text-xs text-mint font-extrabold tracking-widest">REFERENCE CODE: <span id="ref-code">#KP-8842-DEMO</span></p>
+                    <p class="text-xs text-softgrey max-w-md mx-auto">This is a frontend demo experience. No real payment or reservation was transmitted.</p>
+                    <button onclick="resetBookingFlow()" class="mt-4 px-8 py-3 rounded-full bg-graphite border border-white/10 text-xs font-extrabold text-chalk uppercase hover:bg-white/10">
+                        BOOK ANOTHER SESSION
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION 7: BMI CALCULATOR (WITH HEALTH DISCLAIMER) -->
+    <section id="bmi" class="py-24 relative z-10 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="max-w-3xl mx-auto glass-panel p-8 sm:p-10 rounded-3xl border border-white/10 space-y-8">
+                <div class="text-center space-y-2">
+                    <span class="text-coral text-xs font-extrabold uppercase tracking-widest">ANALYTICS LAB</span>
+                    <h2 class="font-display font-extrabold text-4xl text-chalk uppercase">BMI CALCULATOR</h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="text-xs font-bold text-softgrey uppercase block mb-2">HEIGHT (CM)</label>
+                        <input type="number" id="bmi-h" value="178" class="w-full p-4 rounded-2xl bg-midnight border border-white/10 text-chalk font-display text-xl font-bold focus:outline-none focus:border-coral">
+                    </div>
+                    <div>
+                        <label class="text-xs font-bold text-softgrey uppercase block mb-2">WEIGHT (KG)</label>
+                        <input type="number" id="bmi-w" value="75" class="w-full p-4 rounded-2xl bg-midnight border border-white/10 text-chalk font-display text-xl font-bold focus:outline-none focus:border-coral">
+                    </div>
+                </div>
+
+                <button onclick="calculateBMI()" class="w-full py-4 rounded-2xl bg-coral text-midnight font-extrabold text-xs uppercase tracking-widest hover:bg-white transition-all">
+                    CALCULATE SCORE
+                </button>
+
+                <div class="bg-midnight/80 p-6 rounded-2xl border border-white/5 text-center hidden" id="bmi-result">
+                    <span class="text-xs text-softgrey font-bold uppercase block mb-1">YOUR RESULT</span>
+                    <div class="font-display font-black text-6xl text-coral mb-2" id="bmi-score">23.7</div>
+                    <div id="bmi-status" class="inline-block px-4 py-1 rounded-full bg-mint/20 text-mint text-xs font-extrabold uppercase">HEALTHY RANGE</div>
+                </div>
+
+                <!-- Mandatory Health Disclaimer -->
+                <p class="text-[11px] text-softgrey leading-relaxed border-t border-white/5 pt-4 text-center italic">
+                    Disclaimer: BMI is a general screening measure and does not diagnose health conditions or account for athletic muscle density. Teenagers require age- and sex-specific growth charts assessed by qualified healthcare professionals.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: MEMBERSHIP PRICING PLANS -->
+    <section id="pricing" class="py-24 relative z-10 bg-graphite/20 border-t border-white/5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-coral text-xs font-extrabold uppercase tracking-widest mb-2 block">MEMBERSHIP ACCESS</span>
+                <h2 class="font-display font-extrabold text-5xl uppercase tracking-tight text-chalk">CHOOSE YOUR <span class="text-coral">TIER</span></h2>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Basic -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-chalk uppercase mb-2">BASIC</h3>
+                        <div class="font-display font-black text-4xl text-chalk mb-6">$49<span class="text-xs text-softgrey font-sans">/mo</span></div>
+                        <ul class="text-xs text-softgrey space-y-3 font-semibold mb-8">
+                            <li>• Gym Floor Access</li>
+                            <li>• Locker Room Access</li>
+                        </ul>
+                    </div>
+                    <a href="#booking" class="w-full py-3 rounded-xl bg-graphite text-chalk font-extrabold text-xs uppercase text-center hover:bg-white hover:text-midnight transition-all">SELECT BASIC</a>
+                </div>
+
+                <!-- Pro -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-chalk uppercase mb-2">PRO</h3>
+                        <div class="font-display font-black text-4xl text-chalk mb-6">$89<span class="text-xs text-softgrey font-sans">/mo</span></div>
+                        <ul class="text-xs text-softgrey space-y-3 font-semibold mb-8">
+                            <li>• 24/7 Facility Access</li>
+                            <li>• Unlimited Group Classes</li>
+                        </ul>
+                    </div>
+                    <a href="#booking" class="w-full py-3 rounded-xl bg-graphite text-chalk font-extrabold text-xs uppercase text-center hover:bg-white hover:text-midnight transition-all">SELECT PRO</a>
+                </div>
+
+                <!-- Elite -->
+                <div class="glass-panel p-6 rounded-3xl border border-coral relative flex flex-col justify-between shadow-2xl">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-coral text-midnight font-extrabold text-[10px] uppercase px-3 py-0.5 rounded-full">POPULAR</span>
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-coral uppercase mb-2">ELITE</h3>
+                        <div class="font-display font-black text-4xl text-coral mb-6">$139<span class="text-xs text-softgrey font-sans">/mo</span></div>
+                        <ul class="text-xs text-softgrey space-y-3 font-semibold mb-8">
+                            <li>• Everything in Pro</li>
+                            <li>• 1-on-1 Monthly Coaching</li>
+                        </ul>
+                    </div>
+                    <a href="#booking" class="w-full py-3 rounded-xl bg-coral text-midnight font-extrabold text-xs uppercase text-center hover:bg-white transition-all">SELECT ELITE</a>
+                </div>
+
+                <!-- VIP -->
+                <div class="glass-panel p-6 rounded-3xl border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-chalk uppercase mb-2">VIP</h3>
+                        <div class="font-display font-black text-4xl text-chalk mb-6">$199<span class="text-xs text-softgrey font-sans">/mo</span></div>
+                        <ul class="text-xs text-softgrey space-y-3 font-semibold mb-8">
+                            <li>• Unlimited All Access</li>
+                            <li>• Private Recovery Sauna</li>
+                        </ul>
+                    </div>
+                    <a href="#booking" class="w-full py-3 rounded-xl bg-graphite text-chalk font-extrabold text-xs uppercase text-center hover:bg-white hover:text-midnight transition-all">SELECT VIP</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER WITH MANDATORY AUTHOR CREDIT -->
+    <footer class="bg-midnight border-t border-white/10 py-16 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
+            <div class="flex justify-center items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-midnight border border-coral flex items-center justify-center font-display font-bold text-coral">KP</div>
+                <span class="font-display font-extrabold text-2xl tracking-tight text-chalk">KINETIC <span class="text-coral">PULSE</span></span>
+            </div>
+            
+            <p class="text-xs text-softgrey max-w-md mx-auto">
+                Premier high-performance physical culture club. Designed for modern athletic development.
+            </p>
+
+            <div class="border-t border-white/5 pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-softgrey gap-4">
+                <p>&copy; 2026 KINETIC PULSE. All Rights Reserved.</p>
+                
+                <!-- OFFICIAL MANDATORY AUTHOR CREDIT -->
+                <div class="font-mono text-chalk tracking-wider">
+                    Design and Illustration by Nadir Salaheddine
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MAIN JAVASCRIPT APPLICATION LOGIC -->
+    <script>
+        lucide.createIcons();
+
+        // 1. TOAST NOTIFICATION SYSTEM
+        function showToast(msg) {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'glass-panel p-4 rounded-2xl border border-coral text-xs font-bold text-chalk shadow-2xl transition-all duration-300';
+            toast.innerText = msg;
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // 2. MUSCLE MAP SELECTION DATA
+        const muscleInfo = {
+            chest: {
+                title: 'CHEST & PECTORALS',
+                desc: 'The pectoral muscles drive horizontal pressing force. Training this group enhances upper body power, posture, and front-torso athletic balance.',
+                ex: ['• Incline Barbell Bench Press', '• Cable Chest Flyes', '• Weighted Push-ups'],
+                eq: ['• Power Racks', '• Dumbbells', '• Cable Machines']
+            },
+            back: {
+                title: 'BACK & LATISSIMUS',
+                desc: 'The back muscles stabilize pulling power and protect spine posture during heavy compound movements.',
+                ex: ['• Barbell Pendlay Rows', '• Weighted Pull-ups', '• Lat Pulldowns'],
+                eq: ['• Lifting Platforms', '• Pull-up Racks', '• Cable Stations']
+            },
+            shoulders: {
+                title: 'SHOULDERS & DELTOIDS',
+                desc: 'Deltoid integrity stabilizes overhead movements and guards joint health against heavy force.',
+                ex: ['• Overhead Press', '• Lateral Cable Raises', '• Face Pulls'],
+                eq: ['• Dumbbell Sets', '• Adjustable Benches', '• Resistance Bands']
+            },
+            legs: {
+                title: 'QUADRICEPS & HAMSTRINGS',
+                desc: 'Lower body force production drives sprint velocity, jumping height, and overall athletic base strength.',
+                ex: ['• Barbell Back Squats', '• Romanian Deadlifts', '• Walking Lunges'],
+                eq: ['• Olympic Squat Racks', '• Hex Bars', '• Leg Press Rigs']
+            },
+            core: {
+                title: 'CORE & ABDOMINALS',
+                desc: 'The central trunk transfers power between upper and lower body while protecting the spine.',
+                ex: ['• Hanging Leg Raises', '• Heavy Farmer Carries', '• Cable Woodchoppers'],
+                eq: ['• Pull-up Bars', '• Kettlebells', '• Ab Wheels']
+            }
+        };
+
+        function selectMuscle(key) {
+            const data = muscleInfo[key];
+            if (!data) return;
+            document.getElementById('m-title').innerText = data.title;
+            document.getElementById('m-desc').innerText = data.desc;
+            document.getElementById('m-exercises').innerHTML = data.ex.map(i => `<li>${i}</li>`).join('');
+            document.getElementById('m-equipment').innerHTML = data.eq.map(i => `<li>${i}</li>`).join('');
+            
+            document.querySelectorAll('.muscle-btn').forEach(b => {
+                b.className = 'muscle-btn w-full p-4 rounded-2xl glass-panel border border-white/5 text-left flex justify-between items-center hover:border-white/20';
+            });
+            event.currentTarget.className = 'muscle-btn active w-full p-4 rounded-2xl glass-panel border border-coral text-left flex justify-between items-center';
+        }
+
+        // 3. WEEKLY CLASS SCHEDULE DATA & RENDER
+        const schedData = [
+            { day: 'mon', name: 'MUAY THAI STRIKING', time: '08:00 AM', coach: 'Jaxson Croft', cat: 'combat' },
+            { day: 'mon', name: 'HEAVY POWERLIFTING', time: '10:00 AM', coach: 'Marcus Vance', cat: 'strength' },
+            { day: 'tue', name: 'METABOLIC HIIT BURN', time: '09:00 AM', coach: 'Elena Rostova', cat: 'hiit' },
+            { day: 'wed', name: 'KICKBOXING PROTOCOL', time: '05:30 PM', coach: 'Jaxson Croft', cat: 'combat' },
+            { day: 'thu', name: 'SQUAT & BENCH CLINIC', time: '04:00 PM', coach: 'Marcus Vance', cat: 'strength' },
+            { day: 'fri', name: 'FULL BODY ATHLETIC', time: '06:00 PM', coach: 'Elena Rostova', cat: 'hiit' }
+        ];
+
+        let activeDay = 'mon';
+        let activeFilter = 'all';
+
+        function renderSched() {
+            const container = document.getElementById('schedule-container');
+            container.innerHTML = '';
+            
+            const list = schedData.filter(i => (i.day === activeDay) && (activeFilter === 'all' || i.cat === activeFilter));
+            
+            if (list.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-8 text-softgrey text-xs font-bold uppercase">No classes scheduled for this filter.</div>`;
+                return;
+            }
+
+            list.forEach(item => {
+                const el = document.createElement('div');
+                el.className = 'glass-panel p-6 rounded-3xl border border-white/10 flex justify-between items-center';
+                el.innerHTML = `
+                    <div>
+                        <span class="text-[10px] text-coral font-extrabold uppercase tracking-widest block">${item.cat}</span>
+                        <h4 class="font-display font-bold text-lg text-chalk">${item.name}</h4>
+                        <p class="text-xs text-softgrey font-semibold">${item.time} • Coach ${item.coach}</p>
+                    </div>
+                    <button onclick="startBookingWithProgram('${item.name}')" class="px-4 py-2 rounded-xl bg-coral text-midnight font-extrabold text-xs uppercase hover:bg-white transition-all">
+                        BOOK
+                    </button>
+                `;
+                container.appendChild(el);
+            });
+        }
+
+        document.querySelectorAll('.day-tab').forEach(t => {
+            t.addEventListener('click', (e) => {
+                document.querySelectorAll('.day-tab').forEach(b => b.className = 'day-tab px-6 py-3 rounded-xl font-display font-bold text-lg uppercase glass-panel text-softgrey hover:text-chalk flex-shrink-0');
+                e.currentTarget.className = 'day-tab active px-6 py-3 rounded-xl font-display font-bold text-lg uppercase bg-coral text-midnight flex-shrink-0';
+                activeDay = e.currentTarget.dataset.day;
+                renderSched();
+            });
+        });
+
+        document.querySelectorAll('.sched-filter').forEach(f => {
+            f.addEventListener('click', (e) => {
+                document.querySelectorAll('.sched-filter').forEach(b => b.className = 'sched-filter px-4 py-2 rounded-full text-xs font-extrabold uppercase glass-panel text-softgrey hover:text-chalk');
+                e.currentTarget.className = 'sched-filter active px-4 py-2 rounded-full text-xs font-extrabold uppercase bg-coral text-midnight';
+                activeFilter = e.currentTarget.dataset.filter;
+                renderSched();
+            });
+        });
+
+        renderSched();
+
+        // 4. FRONTEND MULTI-STEP BOOKING FLOW LOGIC
+        let bookingData = { class: '', coach: '', date: '', time: '' };
+
+        function startBookingWithProgram(name) {
+            bookingData.class = name;
+            document.getElementById('summary-class').innerText = name;
+            document.getElementById('b-step-1').classList.add('hidden');
+            document.getElementById('b-step-2').classList.remove('hidden');
+            window.location.hash = '#booking';
+        }
+
+        function selectBookingClass(cls) {
+            bookingData.class = cls;
+            document.getElementById('summary-class').innerText = cls;
+            document.getElementById('b-step-1').classList.add('hidden');
+            document.getElementById('b-step-2').classList.remove('hidden');
+        }
+
+        function selectBookingCoach(coach) {
+            bookingData.coach = coach;
+            document.getElementById('summary-coach').innerText = coach;
+            document.getElementById('b-step-2').classList.add('hidden');
+            document.getElementById('b-step-3').classList.remove('hidden');
+        }
+
+        function selectBookingTime(t) {
+            bookingData.time = t;
+            document.getElementById('summary-time').innerText = t;
+            document.getElementById('b-step-3').classList.add('hidden');
+            document.getElementById('b-step-5').classList.remove('hidden');
+        }
+
+        function confirmBooking() {
+            document.getElementById('b-step-5').classList.add('hidden');
+            document.getElementById('b-step-8').classList.remove('hidden');
+            showToast('Session Reserved Successfully!');
+        }
+
+        function resetBookingFlow() {
+            document.getElementById('b-step-8').classList.add('hidden');
+            document.getElementById('b-step-1').classList.remove('hidden');
+        }
+
+        // 5. BMI CALCULATOR LOGIC
+        function calculateBMI() {
+            const h = parseFloat(document.getElementById('bmi-h').value) / 100;
+            const w = parseFloat(document.getElementById('bmi-w').value);
+            if (!h || !w) return;
+            
+            const bmi = (w / (h * h)).toFixed(1);
+            document.getElementById('bmi-score').innerText = bmi;
+            document.getElementById('bmi-result').classList.remove('hidden');
+        }
+
+        // 6. AUDIO BPM SYNTHESIZER
+        let audioCtx = null;
+        let isSynthPlaying = false;
+        let synthInterval = null;
+
+        document.getElementById('synth-play-btn').addEventListener('click', () => {
+            if (!isSynthPlaying) {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                isSynthPlaying = true;
+                document.getElementById('synth-play-btn').innerText = 'STOP BEAT';
+                showToast('BPM Synthesizer Playing 🎧');
+                
+                const bpm = document.getElementById('bpm-slider').value;
+                const intervalMs = (60 / bpm) * 1000;
+                
+                synthInterval = setInterval(() => {
+                    if (!audioCtx) return;
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+                    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.1);
+                }, intervalMs);
+            } else {
+                isSynthPlaying = false;
+                clearInterval(synthInterval);
+                document.getElementById('synth-play-btn').innerText = 'PLAY BEAT';
+            }
+        });
+
+        // Mobile drawer toggle
+        document.getElementById('mobile-toggle').addEventListener('click', () => {
+            document.getElementById('mobile-drawer').classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(l => {
+            l.addEventListener('click', () => document.getElementById('mobile-drawer').classList.add('hidden'));
+        });
+    </script>
+</body>
+</html>
